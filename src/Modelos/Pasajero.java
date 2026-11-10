@@ -2,7 +2,7 @@ package Modelos;
 
 import java.util.Objects;
 
-public class Cliente
+public class Pasajero
 {
     private String nombre;
     private String apellido;
@@ -11,7 +11,7 @@ public class Cliente
     private String domicilioOrigen;
     private int id;
     
-    public Cliente(String nombre, String apellido, String dni, String domicilioOrigen, String origen)
+    public Pasajero(String nombre, String apellido, String dni, String domicilioOrigen, String origen)
     {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -84,11 +84,11 @@ public class Cliente
     @Override
     public boolean equals(Object o)
     {
-        if (!(o instanceof Cliente cliente))
+        if (!(o instanceof Pasajero pasajero))
         {
             return false;
         }
-        return Objects.equals(dni, cliente.dni);
+        return Objects.equals(dni, pasajero.dni);
     }
     
     @Override
@@ -100,7 +100,7 @@ public class Cliente
     @Override
     public String toString()
     {
-        return "Cliente: " +
+        return "Pasajero: " +
                 "nombre:'" + nombre + '\'' +
                 ", apellido: '" + apellido + '\'' +
                 ", dni: '" + dni + '\'' +

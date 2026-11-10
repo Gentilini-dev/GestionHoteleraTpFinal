@@ -8,8 +8,8 @@ import java.util.Objects;
 public class Reserva
 {
     private int id;
-    private Cliente titular;
-   //private Habitacion habitacion;
+    private Pasajero titular;
+   private Habitacion habitacion;
     private LocalDate desde;
     private LocalDate hasta;
     private EstadoReserva estado;
@@ -26,22 +26,22 @@ public class Reserva
         this.id = id;
     }
     
-    ///public Habitacion getHabitacion()
-    ////{
-     ///   return habitacion;
-   //// }
+    public Habitacion getHabitacion()
+    {
+       return habitacion;
+    }
    
-  /// public void setHabitacion(Habitacion habitacion)
-    ///{
-    ////    this.habitacion = habitacion;
-    ///}
+   public void setHabitacion(Habitacion habitacion)
+    {
+       this.habitacion = habitacion;
+    }
     
-    public Cliente getTitular()
+    public Pasajero getTitular()
     {
         return titular;
     }
     
-    public void setTitular(Cliente titular)
+    public void setTitular(Pasajero titular)
     {
         this.titular = titular;
     }
