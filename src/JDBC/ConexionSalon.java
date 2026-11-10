@@ -2,6 +2,7 @@ package JDBC;
 
 import Enums.TipoSalon;
 import Excepciones.ErrorConexionSQLException;
+import Interfaz.IConexion;
 import Modelos.Salon;
 import java.sql.*;
 import java.util.ArrayList;
@@ -54,12 +55,52 @@ public class ConexionSalon implements IConexion<Salon>
     }
 
     @Override
+    public void actualizar(Salon s) throws ErrorConexionSQLException
+    {
+        try
+        {
+            Connection con = ConexionManager.getConnection();
+            PreparedStatement ps = con.prepareStatement(
+                    "UPDATE salones SET nombre = ?, capacidad = ?, tipo = ? WHERE id = ?");
+            ps.setString(1, s.getNombre());
+            ps.setInt(2, s.getCapacidad());
+            ps.setString(3, s.getTipo().name());
+            ps.setInt(4, s.getId());
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            throw new ErrorConexionSQLException("Error al actualizar el salón.");
+        }
+    }
+
+    @Override
+    public void eliminar(int id) throws ErrorConexionSQLException
+    {
+        try
+        {
+            Connection con = ConexionManager.getConnection();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM salones WHERE id = ?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        }
+        catch (SQLException e)
+        {
+            throw new ErrorConexionSQLException("Error al eliminar el salón.");
+        }
+    }
+
+    @Override
     public ArrayList<Salon> traerTodos() throws ErrorConexionSQLException
     {
-        Connection con = ConexionManager.getConnection();
         ArrayList<Salon> salones = new ArrayList<>();
         try
         {
+            Connection con = ConexionManager.getConnection();
             PreparedStatement ps = con.prepareStatement("SELECT * FROM salones");
             ResultSet rs = ps.executeQuery();
             while (rs.next())
