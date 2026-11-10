@@ -24,7 +24,7 @@ public class ConexionManager
         }
         return connection;
     }
-    
+
     public static void Closeconection()
     {
         try

@@ -4,6 +4,11 @@ public class ErrorConexionSQLException extends Exception
 {
     public ErrorConexionSQLException()
     {
-        super("Error al crear la conexion");
+        super("No se pudo conectar a la base de datos.");
+    }
+
+    public ErrorConexionSQLException(String mensaje)
+    {
+        super(mensaje);
     }
 }
