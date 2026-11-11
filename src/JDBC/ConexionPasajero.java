@@ -48,6 +48,7 @@ public class ConexionPasajero implements IConexion<Pasajero>
             ps.setString(4, pasajero.getApellido());
             ps.setString(5, pasajero.getOrigen());
             ps.setString(6, pasajero.getDomicilioOrigen());
+           
             ps.execute();
             ps.close();
             con.close();
@@ -120,7 +121,7 @@ public class ConexionPasajero implements IConexion<Pasajero>
                 String origen = rs.getString("origen");
                 String domicilioOrigen = rs.getString("domicilioOrigen");
                 
-                pasajeros.add(new Pasajero(nombre, apellido, dni, origen, domicilioOrigen));
+                pasajeros.add(new Pasajero(nombre, apellido, dni, origen, domicilioOrigen,id));
             }
             ps.executeUpdate();
             ps.close();

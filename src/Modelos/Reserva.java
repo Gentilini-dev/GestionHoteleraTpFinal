@@ -14,7 +14,15 @@ public class Reserva
     private LocalDate hasta;
     private EstadoReserva estado;
     
-    
+    public Reserva(int id, Pasajero titular, Habitacion habitacion, LocalDate desde, LocalDate hasta, EstadoReserva estado)
+    {
+        this.id = id;
+        this.titular = titular;
+        this.habitacion = habitacion;
+        this.desde = desde;
+        this.hasta = hasta;
+        this.estado = estado;
+    }
     
     public int getId()
     {

@@ -19,8 +19,8 @@ import Interfaz.*;
  */
 public class ConexionEstadia implements IConexion<Estadia>
 {
-    private HashMap<Integer, Habitacion> habitaciones;   // clave: número de habitación
-    private HashMap<Integer, Pasajero> pasajeros;        // clave: id del pasajero
+    private HashMap<Integer, Habitacion> habitaciones;
+    private HashMap<Integer, Pasajero> pasajeros;
 
     public ConexionEstadia(HashMap<Integer, Habitacion> habitaciones,
                            HashMap<Integer, Pasajero> pasajeros)
@@ -40,7 +40,7 @@ public class ConexionEstadia implements IConexion<Estadia>
                     "id INT NOT NULL," +
                     "numero_habitacion INT NOT NULL," +
                     "fecha_ingreso DATE NOT NULL," +
-                    "fecha_egreso DATE," +                    // puede ser NULL (estadía activa)
+                    "fecha_egreso DATE," +
                     "estado VARCHAR(20) NOT NULL," +
                     "PRIMARY KEY (id))");
             stmt.execute("CREATE TABLE IF NOT EXISTS estadia_ocupantes (" +
@@ -104,12 +104,12 @@ public class ConexionEstadia implements IConexion<Estadia>
     public ArrayList<Estadia> traerTodos() throws ErrorConexionSQLException
     {
         ArrayList<Estadia> estadias = new ArrayList<>();
-        HashMap<Integer, Estadia> porId = new HashMap<>();   // para ubicar rápido cada estadía en el paso 2
+        HashMap<Integer, Estadia> porId = new HashMap<>();
         try
         {
             Connection con = ConexionManager.getConnection();
 
-            // 1) Las estadías, todavía sin ocupantes
+           
             PreparedStatement ps = con.prepareStatement("SELECT * FROM estadias");
             ResultSet rs = ps.executeQuery();
             while (rs.next())
@@ -132,7 +132,7 @@ public class ConexionEstadia implements IConexion<Estadia>
             rs.close();
             ps.close();
 
-            // 2) Los ocupantes, cada uno a su estadía
+            
             PreparedStatement psOcupantes = con.prepareStatement("SELECT * FROM estadia_ocupantes");
             ResultSet rsOcupantes = psOcupantes.executeQuery();
             while (rsOcupantes.next())
@@ -152,7 +152,7 @@ public class ConexionEstadia implements IConexion<Estadia>
         return estadias;
     }
 
-    // Actualiza los datos de la estadía (se usa en el check-out). Los ocupantes no cambian.
+   
     @Override
     public void actualizar(Estadia e) throws ErrorConexionSQLException
     {
@@ -184,7 +184,7 @@ public class ConexionEstadia implements IConexion<Estadia>
         }
     }
 
-    // Primero se borran los ocupantes y después la estadía (por la FOREIGN KEY)
+    
     @Override
     public void eliminar(int id) throws ErrorConexionSQLException
     {

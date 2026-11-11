@@ -11,13 +11,14 @@ public class Pasajero
     private String domicilioOrigen;
     private int id;
     
-    public Pasajero(String nombre, String apellido, String dni, String domicilioOrigen, String origen)
+    public Pasajero(String nombre, String apellido, String dni, String domicilioOrigen, String origen,int id)
     {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
         this.domicilioOrigen = domicilioOrigen;
         this.origen = origen;
+        this.id=id;
         
     }
     

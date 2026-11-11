@@ -54,11 +54,11 @@ public class ConexionEvento implements IConexion<Evento>
             PreparedStatement ps = con.prepareStatement(
                     "INSERT INTO eventos VALUES (?,?,?,?,?,?)");
             ps.setInt(1, e.getId());
-            ps.setInt(2, e.getSalon().getId());              // objeto -> id
+            ps.setInt(2, e.getSalon().getId());
             ps.setString(3, e.getOrganizador());
-            ps.setDate(4, Date.valueOf(e.getFecha()));       // LocalDate -> Date
+            ps.setDate(4, Date.valueOf(e.getFecha()));
             ps.setInt(5, e.getAsistentes());
-            ps.setString(6, e.getEstado().name());           // enum -> texto
+            ps.setString(6, e.getEstado().name());
             ps.executeUpdate();
             ps.close();
             con.close();
@@ -81,9 +81,9 @@ public class ConexionEvento implements IConexion<Evento>
             while (rs.next())
             {
                 int id = rs.getInt("id");
-                Salon salon = salones.get(rs.getInt("id_salon"));           // id -> objeto
+                Salon salon = salones.get(rs.getInt("id_salon"));
                 String organizador = rs.getString("organizador");
-                LocalDate fecha = rs.getDate("fecha").toLocalDate();       // Date -> LocalDate
+                LocalDate fecha = rs.getDate("fecha").toLocalDate();
                 int asistentes = rs.getInt("asistentes");
                 EstadoEvento estado = EstadoEvento.valueOf(rs.getString("estado"));
                 eventos.add(new Evento(id, salon, organizador, fecha, asistentes, estado));
