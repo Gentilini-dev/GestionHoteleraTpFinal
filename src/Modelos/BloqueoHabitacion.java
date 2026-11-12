@@ -78,7 +78,7 @@ public class BloqueoHabitacion
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(id)*22;
+        return Objects.hashCode(id) * 22;
     }
     
     @Override
