@@ -1,11 +1,12 @@
 package Modelos;
 
 import Enums.EstadoReserva;
+import Interfaz.IIdentificable;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Reserva
+public class Reserva implements IIdentificable
 {
     private int id;
     private Pasajero titular;
@@ -27,11 +28,6 @@ public class Reserva
     public int getId()
     {
         return id;
-    }
-    
-    public void setId(int id)
-    {
-        this.id = id;
     }
     
     public Habitacion getHabitacion()
@@ -106,7 +102,7 @@ public class Reserva
         return "Reserva: " +
                 "id: " + id +
                 ", titular: " + titular +
-                ", habitacion: " +
+                ", habitacion: " +habitacion.getNumeroHabitacion()+
                 ", desde: " + desde +
                 ", hasta: " + hasta +
                 ", estado: " + estado + ".";

@@ -1,48 +1,55 @@
 package Colecciones;
 
+import Excepciones.ElementoDuplicadoException;
+import Excepciones.ElementoNoEncontradoException;
+import Interfaz.IIdentificable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Catalogo<T>
+public class Catalogo<T extends IIdentificable>
 {
-    HashMap<Integer, T> Elementos;
-    
+    private HashMap<Integer, T> elementos;
+
     public Catalogo()
     {
-        Elementos = new HashMap<>();
+        elementos = new HashMap<>();
     }
-    
-    public void agregar(int id, T t)
+
+    // El id se obtiene del propio elemento, así siempre coincide
+    public void agregar(T elemento) throws ElementoDuplicadoException
     {
-        Elementos.put(id, t);
+        if (elementos.containsKey(elemento.getId()))
+        {
+            throw new ElementoDuplicadoException(elemento.getId());
+        }
+        elementos.put(elemento.getId(), elemento);
     }
-    
-    public T buscar(int id)
+
+    public T buscar(int id) throws ElementoNoEncontradoException
     {
-        return Elementos.get(id);
+        if (!elementos.containsKey(id))
+        {
+            throw new ElementoNoEncontradoException(id);
+        }
+        return elementos.get(id);
     }
-    
-    public void eliminar(int id)
+
+    public void eliminar(int id) throws ElementoNoEncontradoException
     {
-        Elementos.remove(id);
+        if (!elementos.containsKey(id))
+        {
+            throw new ElementoNoEncontradoException(id);
+        }
+        elementos.remove(id);
     }
-    
+
     public boolean existe(int id)
     {
-        if (Elementos.containsKey(id))
-        {
-            return true;
-        }
-        return false;
+        return elementos.containsKey(id);
     }
-    
+
     public ArrayList<T> listar()
     {
-        ArrayList<T> lista = new ArrayList<>();
-        for (T t : Elementos.values())
-        {
-            lista.add(t);
-        }
-        return lista;
+        return new ArrayList<>(elementos.values());
     }
 }

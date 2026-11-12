@@ -1,8 +1,10 @@
 package Modelos;
 
+import Interfaz.IIdentificable;
+
 import java.util.Objects;
 
-public class Pasajero
+public class Pasajero implements IIdentificable
 {
     private String nombre;
     private String apellido;
@@ -75,11 +77,6 @@ public class Pasajero
     public int getId()
     {
         return id;
-    }
-    
-    public void setId(int id)
-    {
-        this.id = id;
     }
     
     @Override
