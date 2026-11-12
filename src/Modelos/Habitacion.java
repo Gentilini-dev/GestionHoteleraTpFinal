@@ -1,10 +1,11 @@
 package Modelos;
 
 import Enums.TipoHabitacion;
+import Interfaz.IIdentificable;
 
 import java.util.Objects;
 
-public class Habitacion
+public class Habitacion implements IIdentificable
 {
     private int numeroHabitacion;
     private int piso;
@@ -18,15 +19,16 @@ public class Habitacion
         this.tipoHabitacion = tipoHabitacion;
        
     }
-    
+
     public int getNumeroHabitacion()
     {
         return numeroHabitacion;
     }
-    
-    public void setNumeroHabitacion(int numeroHabitacion)
+
+    @Override
+    public int getId()
     {
-        this.numeroHabitacion = numeroHabitacion;
+        return numeroHabitacion;
     }
     
     public TipoHabitacion getTipoHabitacion()
