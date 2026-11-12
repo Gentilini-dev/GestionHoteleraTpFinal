@@ -9,7 +9,7 @@ public class Reserva
 {
     private int id;
     private Pasajero titular;
-   private Habitacion habitacion;
+    private Habitacion habitacion;
     private LocalDate desde;
     private LocalDate hasta;
     private EstadoReserva estado;
@@ -36,12 +36,12 @@ public class Reserva
     
     public Habitacion getHabitacion()
     {
-       return habitacion;
+        return habitacion;
     }
-   
-   public void setHabitacion(Habitacion habitacion)
+    
+    public void setHabitacion(Habitacion habitacion)
     {
-       this.habitacion = habitacion;
+        this.habitacion = habitacion;
     }
     
     public Pasajero getTitular()
@@ -97,7 +97,7 @@ public class Reserva
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(id)* 22;
+        return Objects.hashCode(id) * 22;
     }
     
     @Override
@@ -106,7 +106,7 @@ public class Reserva
         return "Reserva: " +
                 "id: " + id +
                 ", titular: " + titular +
-                ", habitacion: " + ///habitacion +
+                ", habitacion: " +
                 ", desde: " + desde +
                 ", hasta: " + hasta +
                 ", estado: " + estado + ".";
