@@ -3,6 +3,7 @@ package Modelos;
 import Enums.EstadoEvento;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Evento
 {
@@ -73,6 +74,22 @@ public class Evento
     public void setEstado(EstadoEvento estado)
     {
         this.estado = estado;
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof Evento evento))
+        {
+            return false;
+        }
+        return id == evento.id;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(id)*22;
     }
     
     @Override

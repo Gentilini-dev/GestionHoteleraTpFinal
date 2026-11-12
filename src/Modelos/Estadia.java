@@ -4,6 +4,7 @@ import Enums.EstadoEstadia;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Estadia
 {
@@ -76,6 +77,22 @@ public class Estadia
     public EstadoEstadia getEstado()
     {
         return estado;
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof Estadia estadia))
+        {
+            return false;
+        }
+        return id == estadia.id;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(id)*22;
     }
     
     @Override

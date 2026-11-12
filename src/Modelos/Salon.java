@@ -2,6 +2,8 @@ package Modelos;
 
 import Enums.TipoSalon;
 
+import java.util.Objects;
+
 public class Salon
 {
     private int id;
@@ -50,6 +52,22 @@ public class Salon
     public void setTipo(TipoSalon tipo)
     {
         this.tipo = tipo;
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof Salon salon))
+        {
+            return false;
+        }
+        return id == salon.id;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(id)*22;
     }
     
     @Override
