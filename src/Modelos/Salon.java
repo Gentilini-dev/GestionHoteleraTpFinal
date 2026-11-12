@@ -1,8 +1,9 @@
 package Modelos;
 
 import Enums.TipoSalon;
+import Interfaz.IIdentificable;
 
-public class Salon
+public class Salon implements IIdentificable
 {
     private int id;
     private String nombre;
