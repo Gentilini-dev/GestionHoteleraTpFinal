@@ -3,6 +3,7 @@ package Modelos;
 import Enums.MotivoBloqueo;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class BloqueoHabitacion
 {
@@ -62,6 +63,22 @@ public class BloqueoHabitacion
     public void setHasta(LocalDate hasta)
     {
         this.hasta = hasta;
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof BloqueoHabitacion that))
+        {
+            return false;
+        }
+        return id == that.id;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(id)*22;
     }
     
     @Override

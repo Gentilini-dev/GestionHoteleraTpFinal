@@ -1,9 +1,8 @@
 package Modelos;
 
 import Enums.TipoSalon;
-import Interfaz.IIdentificable;
 
-public class Salon implements IIdentificable
+public class Salon
 {
     private int id;
     private String nombre;
@@ -17,7 +16,7 @@ public class Salon implements IIdentificable
         this.capacidad = capacidad;
         this.tipo = tipo;
     }
-
+    
     public int getId()
     {
         return id;
