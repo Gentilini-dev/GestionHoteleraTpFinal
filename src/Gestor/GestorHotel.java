@@ -56,8 +56,7 @@ public class GestorHotel
         for (Reserva r : reservas)
         {
             if (r.getHabitacion().getId() == nro
-                    && (r.getEstado() == EstadoReserva.CONFIRMADA || r.getEstado() == EstadoReserva.EN_CURSO)
-                    && seSuperponen(r.getDesde(), r.getHasta(), desde, hasta))
+                    && (r.getEstado() == EstadoReserva.CONFIRMADA || r.getEstado() == EstadoReserva.EN_CURSO) && seSuperponen(r.getDesde(), r.getHasta(), desde, hasta))
             {
                 return false;
             }
@@ -65,8 +64,7 @@ public class GestorHotel
         
         for (BloqueoHabitacion b : bloqueos)
         {
-            if (b.getHabitacion().getId() == nro
-                    && seSuperponen(b.getDesde(), b.getHasta(), desde, hasta))
+            if (b.getHabitacion().getId() == nro && seSuperponen(b.getDesde(), b.getHasta(), desde, hasta))
             {
                 return false;
             }
@@ -77,7 +75,7 @@ public class GestorHotel
     
     public boolean estaDisponible(int nro, LocalDate desde, LocalDate hasta) throws ElementoNoEncontradoException
     {
-        habitaciones.buscar(nro);   // si no existe, lanza la excepción
+        habitaciones.buscar(nro);
         return estaLibre(nro, desde, hasta);
     }
     
@@ -95,8 +93,7 @@ public class GestorHotel
         throw new ElementoNoEncontradoException("No se encontró ningún pasajero con DNI " + dni + ".");
     }
     
-    public Reserva crearReserva(String dni, int nro, LocalDate desde, int noches)
-            throws DatosInvalidosException, ElementoNoEncontradoException, HabitacionNoDisponibleException
+    public Reserva crearReserva(String dni, int nro, LocalDate desde, int noches) throws DatosInvalidosException, ElementoNoEncontradoException, HabitacionNoDisponibleException
     {
         if (noches < 1)
         {
@@ -140,8 +137,7 @@ public class GestorHotel
         
         if (r.getEstado() != EstadoReserva.CONFIRMADA)
         {
-            throw new DatosInvalidosException("La reserva " + idReserva +
-                                                      " no se puede cancelar porque está " + r.getEstado() + ".");
+            throw new DatosInvalidosException("La reserva " + idReserva + " no se puede cancelar porque está " + r.getEstado() + ".");
         }
         
         r.setEstado(EstadoReserva.CANCELADA);
@@ -173,22 +169,19 @@ public class GestorHotel
         throw new ElementoNoEncontradoException("La habitación " + nro + " no tiene una estadía activa.");
     }
     
-    public Estadia checkIn(int idReserva, ArrayList<String> dnisAcompanantes)
-            throws ElementoNoEncontradoException, DatosInvalidosException
+    public Estadia checkIn(int idReserva, ArrayList<String> dnisAcompanantes) throws ElementoNoEncontradoException, DatosInvalidosException
     {
         Reserva r = buscarReserva(idReserva);
         
         if (r.getEstado() != EstadoReserva.CONFIRMADA)
         {
-            throw new DatosInvalidosException("La reserva " + idReserva +
-                                                      " no admite check-in porque está " + r.getEstado() + ".");
+            throw new DatosInvalidosException("La reserva " + idReserva + " no admite check-in porque está " + r.getEstado() + ".");
         }
         
         LocalDate hoy = LocalDate.now();
         if (hoy.isBefore(r.getDesde()) || !hoy.isBefore(r.getHasta()))
         {
-            throw new DatosInvalidosException("El check-in de la reserva " + idReserva +
-                                                      " solo puede hacerse entre el " + r.getDesde() + " y el " + r.getHasta().minusDays(1) + ".");
+            throw new DatosInvalidosException("El check-in de la reserva " + idReserva + " solo puede hacerse entre el " + r.getDesde() + " y el " + r.getHasta().minusDays(1) + ".");
         }
         
         int nro = r.getHabitacion().getId();
@@ -233,8 +226,7 @@ public class GestorHotel
     
     private int proximoIdBloqueo = 1;
     
-    public BloqueoHabitacion bloquearHabitacion(int nro, MotivoBloqueo motivo, String detalle, LocalDate desde, int dias)
-            throws DatosInvalidosException, ElementoNoEncontradoException, HabitacionNoDisponibleException
+    public BloqueoHabitacion bloquearHabitacion(int nro, MotivoBloqueo motivo, String detalle, LocalDate desde, int dias) throws DatosInvalidosException, ElementoNoEncontradoException, HabitacionNoDisponibleException
     {
         if (dias < 1)
         {
@@ -307,8 +299,7 @@ public class GestorHotel
         throw new ElementoNoEncontradoException("No existe un evento con id " + idEvento + ".");
     }
     
-    public Evento reservarSalon(int idSalon, LocalDate fecha, String organizador, int asistentes)
-            throws DatosInvalidosException, ElementoNoEncontradoException, SalonNoDisponibleException
+    public Evento reservarSalon(int idSalon, LocalDate fecha, String organizador, int asistentes) throws DatosInvalidosException, ElementoNoEncontradoException, SalonNoDisponibleException
     {
         if (fecha.isBefore(LocalDate.now()))
         {
@@ -319,16 +310,13 @@ public class GestorHotel
         
         if (asistentes < 1 || asistentes > salon.getCapacidad())
         {
-            throw new DatosInvalidosException("La cantidad de asistentes debe estar entre 1 y " +
-                                                      salon.getCapacidad() + " (capacidad del salón " + salon.getNombre() + ").");
+            throw new DatosInvalidosException("La cantidad de asistentes debe estar entre 1 y " + salon.getCapacidad() + " (capacidad del salón " + salon.getNombre() + ").");
         }
         
         
         for (Evento e : eventos)
         {
-            if (e.getSalon().getId() == idSalon
-                    && e.getEstado() == EstadoEvento.CONFIRMADO
-                    && e.getFecha().equals(fecha))
+            if (e.getSalon().getId() == idSalon && e.getEstado() == EstadoEvento.CONFIRMADO && e.getFecha().equals(fecha))
             {
                 throw new SalonNoDisponibleException(salon.getNombre(), fecha);
             }
@@ -346,8 +334,7 @@ public class GestorHotel
         
         if (e.getEstado() != EstadoEvento.CONFIRMADO)
         {
-            throw new DatosInvalidosException("El evento " + idEvento +
-                                                      " no se puede cancelar porque está " + e.getEstado() + ".");
+            throw new DatosInvalidosException("El evento " + idEvento + " no se puede cancelar porque está " + e.getEstado() + ".");
         }
         
         e.cancelar();
@@ -367,12 +354,13 @@ public class GestorHotel
         }
         return historial;
     }
+    
     public ArrayList<Pasajero> listarPasajeros()
     {
         return pasajeros.listar();
     }
-    public ArrayList<Reserva> reservasDePasajero(String dni)
-            throws ElementoNoEncontradoException
+    
+    public ArrayList<Reserva> reservasDePasajero(String dni) throws ElementoNoEncontradoException
     {
         Pasajero pasajero = buscarPasajeroPorDni(dni);
         
