@@ -1,6 +1,13 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import Gestor.GestorHotel;
+import Vista.Menu;
+import java.util.Scanner;
+
 void main()
 {
-
+    GestorHotel gestor = new GestorHotel();
+    Scanner sc = new Scanner(System.in);
+    
+    Menu menu = new Menu(gestor, sc);
+    
+    menu.iniciar();
 }
