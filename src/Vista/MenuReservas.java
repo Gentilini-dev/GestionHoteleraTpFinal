@@ -1,6 +1,7 @@
 package Vista;
 
 import Excepciones.DatosInvalidosException;
+import Excepciones.ElementoDuplicadoException;
 import Excepciones.ElementoNoEncontradoException;
 import Excepciones.ErrorConexionSQLException;
 import Excepciones.HabitacionNoDisponibleException;
@@ -179,7 +180,7 @@ public class MenuReservas
                 System.out.print("DNI del acompañante: ");
                 dni = sc.nextLine().trim();
                 
-                if (!dni.isEmpty())
+                if (!dni.isEmpty() && pasajeroRegistrado(dni))
                 {
                     dnisAcompanantes.add(dni);
                 }
@@ -224,6 +225,50 @@ public class MenuReservas
         catch (ElementoNoEncontradoException | ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
+        }
+    }
+
+    // Si el acompañante no está registrado, se ofrece darlo de alta ahí mismo
+    // para no tener que salir del check-in. Devuelve true si se puede usar el DNI.
+    private boolean pasajeroRegistrado(String dni)
+    {
+        try
+        {
+            gestor.buscarPasajeroPorDni(dni);
+            return true;
+        }
+        catch (ElementoNoEncontradoException e)
+        {
+            System.out.print("Ese DNI no está registrado. ¿Querés registrarlo ahora? (s/n): ");
+            if (!sc.nextLine().trim().equalsIgnoreCase("s"))
+            {
+                System.out.println("No se agregó el acompañante.");
+                return false;
+            }
+        }
+
+        System.out.print("Nombre: ");
+        String nombre = sc.nextLine();
+
+        System.out.print("Apellido: ");
+        String apellido = sc.nextLine();
+
+        System.out.print("Domicilio de origen: ");
+        String domicilioOrigen = sc.nextLine();
+
+        System.out.print("Origen: ");
+        String origen = sc.nextLine();
+
+        try
+        {
+            gestor.registrarPasajero(nombre, apellido, dni, domicilioOrigen, origen);
+            System.out.println("Pasajero registrado.");
+            return true;
+        }
+        catch (ElementoDuplicadoException | ErrorConexionSQLException e)
+        {
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 

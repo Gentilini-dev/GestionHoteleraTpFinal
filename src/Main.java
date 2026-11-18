@@ -7,7 +7,7 @@ import java.util.Scanner;
 /*
  * TP Final - Programación II - UTN TUP
  * Sistema de gestión hotelera
- * Integrantes: Felipe Fernández Barreneche y Santiago Gentilini
+ * Integrantes: Felipe Fernández Barreneche y Santino Gentilini
  */
 public class Main
 {
