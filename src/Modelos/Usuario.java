@@ -95,7 +95,7 @@ public abstract class Usuario implements IIdentificable
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(id)*22;
+        return Objects.hashCode(id) * 22;
     }
     
     @Override
