@@ -1,10 +1,12 @@
 package Vista;
 
+import Excepciones.ErrorArchivoException;
 import Gestor.GestorHotel;
 import Modelos.Usuario;
 import Modelos.UsuarioAdministrador;
 import Modelos.UsuarioRecepcionista;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu
@@ -85,6 +87,8 @@ public class Menu
             System.out.println("1. Gestión de pasajeros");
             System.out.println("2. Gestión de habitaciones");
             System.out.println("3. Gestión de reservas y estadías");
+            System.out.println("4. Realizar backup");
+            System.out.println("5. Ver último backup");
             System.out.println("0. Salir");
             System.out.print("Elegí una opción: ");
             
@@ -102,6 +106,14 @@ public class Menu
                 
                 case "3":
                     abrirMenuReservas();
+                    break;
+                
+                case "4":
+                    realizarBackup();
+                    break;
+                
+                case "5":
+                    verBackup();
                     break;
                 
                 case "0":
@@ -177,5 +189,37 @@ public class Menu
         MenuReservas menuReservas = new MenuReservas(gestor, sc);
         
         menuReservas.iniciar();
+    }
+    
+    // Guarda todos los datos del hotel en un archivo de texto (solo administrador)
+    private void realizarBackup()
+    {
+        try
+        {
+            String ruta = gestor.realizarBackup();
+            System.out.println("Backup realizado correctamente en: " + ruta);
+        }
+        catch (ErrorArchivoException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    // Lee el archivo de backup y lo muestra por pantalla
+    private void verBackup()
+    {
+        try
+        {
+            ArrayList<String> lineas = gestor.leerBackup();
+            System.out.println();
+            for (String linea : lineas)
+            {
+                System.out.println(linea);
+            }
+        }
+        catch (ErrorArchivoException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 }
