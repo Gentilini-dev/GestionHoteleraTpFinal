@@ -85,7 +85,7 @@ public class ConexionEstadia implements IConexion<Estadia>
                 psOcupante.executeUpdate();
             }
             psOcupante.close();
-            con.close();
+           
         }
         catch (SQLException ex)
         {
@@ -174,14 +174,13 @@ public class ConexionEstadia implements IConexion<Estadia>
     public void eliminar(int id) throws ErrorConexionSQLException
     {
         try (Connection con = ConexionManager.getConnection();
-             PreparedStatement psOcupantes = con.prepareStatement(
-                     "DELETE FROM estadia_ocupantes WHERE id_estadia = ?"))
+             PreparedStatement psOcupantes = con.prepareStatement("DELETE FROM estadia_ocupantes WHERE id_estadia = ?");
+            PreparedStatement ps = con.prepareStatement("DELETE FROM estadias WHERE id = ?"))
         {
             psOcupantes.setInt(1, id);
             psOcupantes.executeUpdate();
-            psOcupantes.close();
+          
             
-            PreparedStatement ps = con.prepareStatement("DELETE FROM estadias WHERE id = ?");
             ps.setInt(1, id);
             ps.executeUpdate();
             

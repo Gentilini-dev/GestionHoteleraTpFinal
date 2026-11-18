@@ -103,7 +103,6 @@ public class ConexionHabitacion implements IConexion<Habitacion>
         
         try (Connection con = ConexionManager.getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT * FROM habitaciones");
-             
              ResultSet rs = ps.executeQuery())
         {
             
