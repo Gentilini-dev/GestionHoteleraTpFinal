@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
+// Lo que pasa entre el check-in y el check-out de una habitación
 public class Estadia
 {
     private int id;
@@ -16,6 +17,7 @@ public class Estadia
     private EstadoEstadia estado;
     
     
+    // Check-in: arranca hoy y sin fecha de egreso
     public Estadia(int id, Habitacion habitacion, ArrayList<Pasajero> ocupantes)
     {
         this.id = id;
@@ -27,6 +29,7 @@ public class Estadia
     }
     
     
+    // Para leer de la base. Los ocupantes se agregan después con agregarOcupante()
     public Estadia(int id, Habitacion habitacion, LocalDate fechaIngreso, LocalDate fechaEgreso, EstadoEstadia estado)
     {
         this.id = id;
@@ -43,6 +46,7 @@ public class Estadia
     }
     
     
+    // Check-out
     public void finalizar()
     {
         this.fechaEgreso = LocalDate.now();

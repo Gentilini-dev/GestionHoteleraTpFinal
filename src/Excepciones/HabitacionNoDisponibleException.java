@@ -2,6 +2,7 @@ package Excepciones;
 
 import java.time.LocalDate;
 
+// La habitación ya está reservada o bloqueada en esas fechas
 public class HabitacionNoDisponibleException extends Exception {
     public HabitacionNoDisponibleException() {
         super("La habitación no se encuentra disponible");

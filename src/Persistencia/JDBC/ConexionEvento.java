@@ -1,4 +1,4 @@
-package JDBC;
+package Persistencia.JDBC;
 
 import Enums.EstadoEvento;
 import Interfaz.IConexion;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import Excepciones.*;
 
+// Tabla eventos. Se guarda el id del salón y al leer se busca el salón ya cargado
 public class ConexionEvento implements IConexion<Evento>
 {
     // Salones ya cargados, para reconstruir el objeto Salon a partir del id guardado en la tabla

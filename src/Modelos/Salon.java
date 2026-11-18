@@ -3,6 +3,7 @@ package Modelos;
 import Enums.TipoSalon;
 import Interfaz.IIdentificable;
 
+// Salón para eventos (conferencias, fiestas, reuniones)
 public class Salon implements IIdentificable
 {
     private int id;

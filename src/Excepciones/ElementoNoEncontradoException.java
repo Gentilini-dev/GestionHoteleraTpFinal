@@ -1,5 +1,6 @@
 package Excepciones;
 
+// Cuando se busca algo que no existe
 public class ElementoNoEncontradoException extends Exception {
     public ElementoNoEncontradoException(int id)
     {

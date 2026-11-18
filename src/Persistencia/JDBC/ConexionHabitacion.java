@@ -1,4 +1,4 @@
-package JDBC;
+package Persistencia.JDBC;
 
 import Enums.TipoHabitacion;
 import Excepciones.ErrorConexionSQLException;
@@ -8,6 +8,7 @@ import Modelos.Habitacion;
 import java.sql.*;
 import java.util.ArrayList;
 
+// Tabla habitaciones. El tipo se guarda como texto con el nombre del enum
 public class ConexionHabitacion implements IConexion<Habitacion>
 {
     @Override

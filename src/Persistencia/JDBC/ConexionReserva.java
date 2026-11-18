@@ -1,4 +1,4 @@
-package JDBC;
+package Persistencia.JDBC;
 
 import Enums.EstadoReserva;
 import Excepciones.ErrorConexionSQLException;
@@ -12,10 +12,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// Tabla reservas
 public class ConexionReserva implements IConexion<Reserva>
 {
-    // Pasajeros y habitaciones ya cargados en el gestor (clave: id del pasajero / número de habitación).
-    // Se usan para que cada reserva apunte a los MISMOS objetos que están en los catálogos.
+    // Pasajeros y habitaciones que ya cargó el gestor, así cada reserva usa esos mismos objetos
     private HashMap<Integer, Pasajero> pasajeros;
     private HashMap<Integer, Habitacion> habitaciones;
 
@@ -150,7 +150,7 @@ public class ConexionReserva implements IConexion<Reserva>
         try
         {
             Connection con = ConexionManager.getConnection();
-            // La tabla guarda el DNI del titular; con el JOIN obtenemos su id para buscarlo en el catálogo
+            // La tabla guarda el DNI del titular, con el JOIN sacamos su id para buscarlo en el catálogo
             PreparedStatement ps = con.prepareStatement(
                     "SELECT r.id, r.numeroHabitacion, r.desde, r.hasta, r.estado, p.id AS idPasajero "
                             + "FROM reservas r "

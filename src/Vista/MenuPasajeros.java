@@ -11,6 +11,7 @@ import Modelos.Reserva;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Submenú de pasajeros: alta, listado y búsqueda
 public class MenuPasajeros
 {
     private GestorHotel gestor;

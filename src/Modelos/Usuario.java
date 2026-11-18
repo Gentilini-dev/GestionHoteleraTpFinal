@@ -1,8 +1,13 @@
 package Modelos;
 
+import Enums.RolUsuario;
+import Interfaz.IIdentificable;
+import Vista.Menu;
+
 import java.util.Objects;
 
-public abstract class Usuario
+// Abstracta porque no hay usuarios "genéricos": solo administradores y recepcionistas
+public abstract class Usuario implements IIdentificable
 {
     private int id;
     private String nombre;
@@ -28,8 +33,15 @@ public abstract class Usuario
         return false;
         
     }
+
+    // Cada tipo de usuario abre su menú, así el Menu no tiene que preguntar con instanceof
+    public abstract void abrirMenu(Menu menu);
+
+    // Lo usa la base para saber qué tipo de usuario guardar
+    public abstract RolUsuario getRol();
    
     
+    @Override
     public int getId()
     {
         return id;

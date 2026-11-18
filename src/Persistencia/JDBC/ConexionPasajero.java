@@ -1,4 +1,4 @@
-package JDBC;
+package Persistencia.JDBC;
 
 import Excepciones.ErrorConexionSQLException;
 import Interfaz.IConexion;
@@ -7,11 +7,8 @@ import Modelos.Pasajero;
 import java.sql.*;
 import java.util.ArrayList;
 
-/**
- * Acceso a la tabla "pasajeros" de la base de datos.
- * El DNI es la clave primaria (lo usa la FOREIGN KEY de reservas) y el id es UNIQUE,
- * porque el catálogo del gestor organiza a los pasajeros por id.
- */
+// Tabla pasajeros. El DNI es la PK porque reservas lo usa como FK,
+// y el id lo dejamos UNIQUE porque el catálogo busca por id
 public class ConexionPasajero implements IConexion<Pasajero>
 {
     @Override
@@ -63,7 +60,7 @@ public class ConexionPasajero implements IConexion<Pasajero>
         }
     }
 
-    // Actualiza los datos del pasajero. El DNI no se modifica porque es la clave primaria.
+    // El DNI no se actualiza porque es la PK
     @Override
     public void actualizar(Pasajero p) throws ErrorConexionSQLException
     {

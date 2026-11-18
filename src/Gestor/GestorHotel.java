@@ -2,26 +2,21 @@ package Gestor;
 
 import Enums.*;
 import Excepciones.*;
-import JDBC.*;
+import Persistencia.JDBC.*;
 import Modelos.*;
-import Archivos.BackupTXT;
+import Persistencia.Archivos.BackupTXT;
 import Colecciones.Catalogo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-/**
- * Clase gestora del hotel: concentra toda la lógica del sistema (pasajeros, habitaciones,
- * reservas, estadías, bloqueos y eventos) y la persistencia en la base de datos.
- * No imprime nada: informa los problemas lanzando excepciones, que muestra el menú.
- *
- * Regla de persistencia:
- *  - Altas: primero se guarda en la base y, si salió bien, se agrega en memoria.
- *  - Cambios de estado: se modifica el objeto y se actualiza en la base.
- */
+// Clase gestora: tiene toda la lógica del hotel y es la única que habla con la base.
+// No imprime nada, si algo sale mal tira una excepción y el menú muestra el mensaje.
+// En las altas guardamos primero en la base y después en memoria, así si falla la base no queda nada a medias.
 public class GestorHotel
 {
-    // ---------- Datos en memoria ----------
+    // Lo que está cargado en memoria
+    private Catalogo<Usuario> usuarios;
     private Catalogo<Pasajero> pasajeros;
     private Catalogo<Habitacion> habitaciones;
     private Catalogo<Salon> salones;
@@ -30,7 +25,8 @@ public class GestorHotel
     private ArrayList<BloqueoHabitacion> bloqueos;
     private ArrayList<Evento> eventos;
 
-    // ---------- Acceso a la base de datos (un DAO por tabla) ----------
+    // Una conexión por tabla
+    private ConexionUsuario conexionUsuario;
     private ConexionPasajero conexionPasajero;
     private ConexionHabitacion conexionHabitacion;
     private ConexionSalon conexionSalon;
@@ -39,10 +35,10 @@ public class GestorHotel
     private ConexionBloqueoHabitacion conexionBloqueo;
     private ConexionEvento conexionEvento;
 
-    // ---------- Backup en archivo de texto ----------
     private BackupTXT backup;
 
-    // ---------- Próximo id de cada entidad (se ajustan al cargar desde la base) ----------
+    // Próximo id a usar. Se acomodan cuando cargamos lo que hay en la base
+    private int proximoIdUsuario = 1;
     private int proximoIdPasajero = 1;
     private int proximoIdReserva = 1;
     private int proximoIdEstadia = 1;
@@ -51,6 +47,7 @@ public class GestorHotel
 
     public GestorHotel()
     {
+        this.usuarios = new Catalogo<>();
         this.pasajeros = new Catalogo<>();
         this.habitaciones = new Catalogo<>();
         this.salones = new Catalogo<>();
@@ -60,6 +57,7 @@ public class GestorHotel
         this.eventos = new ArrayList<>();
 
         // Los DAOs que reconstruyen relaciones reciben los mapas de los catálogos
+        this.conexionUsuario = new ConexionUsuario();
         this.conexionPasajero = new ConexionPasajero();
         this.conexionHabitacion = new ConexionHabitacion();
         this.conexionSalon = new ConexionSalon();
@@ -71,18 +69,13 @@ public class GestorHotel
         this.backup = new BackupTXT("backup_hotel.txt");
     }
 
-    // =====================================================================
-    //  CARGA INICIAL
-    // =====================================================================
+    // ----- Carga inicial -----
 
-    /**
-     * Crea las tablas que falten y carga en memoria todo lo guardado en la base.
-     * Se llama una sola vez, al iniciar el programa.
-     * El orden importa: primero lo que no depende de nada (pasajeros, habitaciones, salones)
-     * y después lo que los referencia (reservas, estadías, bloqueos, eventos).
-     */
+    // Se llama una vez al arrancar. Primero van pasajeros, habitaciones y salones
+    // porque las reservas, estadías, bloqueos y eventos los necesitan para armarse
     public void cargarDatos() throws ErrorConexionSQLException
     {
+        conexionUsuario.crearTabla();
         conexionPasajero.crearTabla();
         conexionHabitacion.crearTabla();
         conexionSalon.crearTabla();
@@ -93,6 +86,10 @@ public class GestorHotel
 
         try
         {
+            for (Usuario u : conexionUsuario.traerTodos())
+            {
+                usuarios.agregar(u);
+            }
             for (Pasajero p : conexionPasajero.traerTodos())
             {
                 pasajeros.agregar(p);
@@ -118,11 +115,31 @@ public class GestorHotel
         eventos.addAll(conexionEvento.traerTodos());
 
         ajustarContadores();
+
+        // Primera vez que se usa el sistema: sin un admin nadie podría entrar
+        if (usuarios.listar().isEmpty())
+        {
+            Usuario admin = new UsuarioAdministrador(proximoIdUsuario, "Administrador", "admin", "admin123");
+            conexionUsuario.insertar(admin);
+            try
+            {
+                usuarios.agregar(admin);
+            }
+            catch (ElementoDuplicadoException e)
+            {
+                // no puede pasar: el catálogo está vacío
+            }
+            proximoIdUsuario++;
+        }
     }
 
     // Cada contador queda en el mayor id cargado + 1, para no repetir claves primarias
     private void ajustarContadores()
     {
+        for (Usuario u : usuarios.listar())
+        {
+            proximoIdUsuario = Math.max(proximoIdUsuario, u.getId() + 1);
+        }
         for (Pasajero p : pasajeros.listar())
         {
             proximoIdPasajero = Math.max(proximoIdPasajero, p.getId() + 1);
@@ -145,11 +162,61 @@ public class GestorHotel
         }
     }
 
-    // =====================================================================
-    //  ALTAS
-    // =====================================================================
+    // ----- Usuarios -----
 
-    // El id del pasajero lo genera el sistema; el DNI no puede repetirse
+    // Devuelve el usuario si los datos son correctos, si no lanza la excepción
+    public Usuario iniciarSesion(String nombreUsuario, String password) throws DatosInvalidosException
+    {
+        for (Usuario u : usuarios.listar())
+        {
+            if (u.validarUsuario(nombreUsuario, password))
+            {
+                return u;
+            }
+        }
+        throw new DatosInvalidosException("Usuario o contraseña incorrectos.");
+    }
+
+    // Solo lo usa el administrador. El rol define qué menú va a tener el usuario nuevo
+    public Usuario crearUsuario(String nombre, String nombreUsuario, String password, RolUsuario rol)
+            throws ElementoDuplicadoException, DatosInvalidosException, ErrorConexionSQLException
+    {
+        if (nombreUsuario.isBlank() || password.isBlank())
+        {
+            throw new DatosInvalidosException("El usuario y la contraseña no pueden estar vacíos.");
+        }
+        for (Usuario existente : usuarios.listar())
+        {
+            if (existente.getUsuario().equalsIgnoreCase(nombreUsuario))
+            {
+                throw new ElementoDuplicadoException("Ya existe el usuario " + nombreUsuario + ".");
+            }
+        }
+
+        Usuario nuevo;
+        if (rol == RolUsuario.ADMINISTRADOR)
+        {
+            nuevo = new UsuarioAdministrador(proximoIdUsuario, nombre, nombreUsuario, password);
+        }
+        else
+        {
+            nuevo = new UsuarioRecepcionista(proximoIdUsuario, nombre, nombreUsuario, password);
+        }
+
+        conexionUsuario.insertar(nuevo);
+        usuarios.agregar(nuevo);
+        proximoIdUsuario++;
+        return nuevo;
+    }
+
+    public ArrayList<Usuario> listarUsuarios()
+    {
+        return usuarios.listar();
+    }
+
+    // ----- Altas -----
+
+    // El id lo pone el sistema, el DNI no se puede repetir
     public Pasajero registrarPasajero(String nombre, String apellido, String dni, String domicilioOrigen, String origen)
             throws ElementoDuplicadoException, ErrorConexionSQLException
     {
@@ -188,9 +255,7 @@ public class GestorHotel
         salones.agregar(s);
     }
 
-    // =====================================================================
-    //  DISPONIBILIDAD
-    // =====================================================================
+    // ----- Disponibilidad -----
 
     // Dos períodos se pisan si cada uno empieza antes de que termine el otro.
     // El día de salida de uno puede ser el de entrada del siguiente.
@@ -229,9 +294,7 @@ public class GestorHotel
         return estaLibre(nro, desde, hasta);
     }
 
-    // =====================================================================
-    //  PASAJEROS
-    // =====================================================================
+    // ----- Pasajeros -----
 
     public Pasajero buscarPasajeroPorDni(String dni) throws ElementoNoEncontradoException
     {
@@ -281,9 +344,7 @@ public class GestorHotel
         return historial;
     }
 
-    // =====================================================================
-    //  RESERVAS
-    // =====================================================================
+    // ----- Reservas -----
 
     public Reserva crearReserva(String dni, int nro, LocalDate desde, int noches)
             throws DatosInvalidosException, ElementoNoEncontradoException, HabitacionNoDisponibleException,
@@ -342,11 +403,9 @@ public class GestorHotel
         conexionReserva.actualizar(r);
     }
 
-    // =====================================================================
-    //  ESTADÍAS (CHECK-IN / CHECK-OUT)
-    // =====================================================================
+    // ----- Estadías (check-in / check-out) -----
 
-    // ¿Hay alguien alojado ahora en la habitación? (no es un error si no lo hay)
+    // true si hay alguien alojado ahora (que no haya nadie no es un error)
     private boolean tieneEstadiaActiva(int nro)
     {
         for (Estadia e : estadias)
@@ -359,7 +418,7 @@ public class GestorHotel
         return false;
     }
 
-    // Igual que el anterior, pero acá que no haya nadie SÍ es un error (check-out)
+    // Igual que el de arriba pero para el check-out, acá si no hay nadie sí es un error
     private Estadia buscarEstadiaActiva(int nro) throws ElementoNoEncontradoException
     {
         for (Estadia e : estadias)
@@ -436,9 +495,7 @@ public class GestorHotel
         return e;
     }
 
-    // =====================================================================
-    //  BLOQUEOS Y LISTADOS DE HABITACIONES
-    // =====================================================================
+    // ----- Bloqueos y listados de habitaciones -----
 
     public BloqueoHabitacion bloquearHabitacion(int nro, MotivoBloqueo motivo, String detalle, LocalDate desde, int dias)
             throws DatosInvalidosException, ElementoNoEncontradoException, HabitacionNoDisponibleException,
@@ -507,9 +564,7 @@ public class GestorHotel
         return noDisponibles;
     }
 
-    // =====================================================================
-    //  SALONES Y EVENTOS
-    // =====================================================================
+    // ----- Salones y eventos -----
 
     public ArrayList<Salon> listarSalones()
     {
@@ -582,9 +637,7 @@ public class GestorHotel
         conexionEvento.actualizar(e);
     }
 
-    // =====================================================================
-    //  BACKUP (archivo de texto) - función del administrador
-    // =====================================================================
+    // ----- Backup (solo admin) -----
 
     // Escribe en el archivo todos los datos del hotel y devuelve la ruta del backup
     public String realizarBackup() throws ErrorArchivoException

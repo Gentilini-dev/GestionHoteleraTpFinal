@@ -1,4 +1,4 @@
-package JDBC;
+package Persistencia.JDBC;
 
 import Enums.TipoSalon;
 import Excepciones.ErrorConexionSQLException;
@@ -8,6 +8,7 @@ import Modelos.Salon;
 import java.sql.*;
 import java.util.ArrayList;
 
+// Tabla salones
 public class ConexionSalon implements IConexion<Salon>
 {
     @Override

@@ -6,6 +6,7 @@ import Interfaz.IIdentificable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+// La habitación queda reservada de 'desde' a 'hasta'. El día 'hasta' ya se puede volver a ocupar
 public class Reserva implements IIdentificable
 {
     private int id;

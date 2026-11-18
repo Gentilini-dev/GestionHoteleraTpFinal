@@ -5,6 +5,7 @@ import Interfaz.IIdentificable;
 
 import java.util.Objects;
 
+// El precio por noche está en el tipo de habitación (enum), no acá
 public class Habitacion implements IIdentificable
 {
     private int numeroHabitacion;
@@ -25,6 +26,7 @@ public class Habitacion implements IIdentificable
         return numeroHabitacion;
     }
 
+    // Para el catálogo, el id es el número de habitación
     @Override
     public int getId()
     {

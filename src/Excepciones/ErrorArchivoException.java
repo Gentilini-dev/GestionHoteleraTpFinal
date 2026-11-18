@@ -1,9 +1,6 @@
 package Excepciones;
 
-/**
- * Se lanza cuando falla la lectura o escritura de un archivo (por ejemplo, el backup).
- * Encapsula la IOException de Java con un mensaje propio.
- */
+// Cuando falla escribir o leer el backup. Reemplaza a la IOException con un mensaje nuestro
 public class ErrorArchivoException extends Exception
 {
     public ErrorArchivoException(String mensaje)

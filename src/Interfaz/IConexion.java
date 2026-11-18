@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Excepciones.ErrorConexionSQLException;
 import Modelos.Salon;
 
+// Lo que tiene que saber hacer cada clase de conexión (hay una por tabla)
 public interface IConexion<T>
 {
     void crearTabla() throws ErrorConexionSQLException;

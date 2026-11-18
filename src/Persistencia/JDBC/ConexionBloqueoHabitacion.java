@@ -1,4 +1,4 @@
-package JDBC;
+package Persistencia.JDBC;
 
 import Enums.MotivoBloqueo;
 import Modelos.BloqueoHabitacion;
@@ -10,6 +10,7 @@ import java.util.HashMap;
 import Interfaz.IConexion;
 import Excepciones.*;
 
+// Tabla bloqueos. Se guarda el número de habitación y al leer se busca la habitación ya cargada
 public class ConexionBloqueoHabitacion implements IConexion<BloqueoHabitacion>
 {
     // Habitaciones ya cargadas (clave: número de habitación), para reconstruir el objeto

@@ -4,6 +4,7 @@ import Interfaz.IIdentificable;
 
 import java.util.Objects;
 
+// Datos que pide la consigna para el informe de pasajeros
 public class Pasajero implements IIdentificable
 {
     private String nombre;
@@ -79,6 +80,7 @@ public class Pasajero implements IIdentificable
         return id;
     }
     
+    // Dos pasajeros son el mismo si tienen el mismo DNI
     @Override
     public boolean equals(Object o)
     {

@@ -18,6 +18,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Submenú de habitaciones: altas, listados, disponibilidad y bloqueos
 public class MenuHabitaciones
 {
     private GestorHotel gestor;
@@ -199,6 +200,7 @@ public class MenuHabitaciones
         }
     }
     
+    // Si se puede ocupar una habitación entre dos fechas
     private void consultarDisponibilidad()
     {
         try

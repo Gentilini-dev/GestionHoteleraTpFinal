@@ -1,5 +1,6 @@
 package Excepciones;
 
+// Envuelve los errores de SQL, así los DAOs no imprimen nada y el mensaje lo muestra el menú
 public class ErrorConexionSQLException extends Exception
 {
     public ErrorConexionSQLException()

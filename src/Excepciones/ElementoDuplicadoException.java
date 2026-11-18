@@ -1,5 +1,6 @@
 package Excepciones;
 
+// Cuando se quiere agregar algo que ya existe (mismo id, DNI o usuario)
 public class ElementoDuplicadoException extends Exception {
     public ElementoDuplicadoException(int id)
     {

@@ -5,6 +5,7 @@ import Enums.EstadoEvento;
 import java.time.LocalDate;
 import java.util.Objects;
 
+// Evento en un salón, para un día puntual
 public class Evento
 {
     private int id;
@@ -15,6 +16,7 @@ public class Evento
     private EstadoEvento estado;
     
     
+    // Para eventos nuevos, que siempre arrancan confirmados
     public Evento(int id, Salon salon, String organizador, LocalDate fecha, int asistentes)
     {
         this.id = id;
@@ -26,6 +28,7 @@ public class Evento
     }
     
     
+    // Para cuando se lee de la base, que ya trae el estado
     public Evento(int id, Salon salon, String organizador, LocalDate fecha, int asistentes, EstadoEvento estado)
     {
         this.id = id;

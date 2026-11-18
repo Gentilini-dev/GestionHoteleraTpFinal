@@ -1,7 +1,9 @@
 package Modelos;
 
-import java.util.ArrayList;
+import Enums.RolUsuario;
+import Vista.Menu;
 
+// Recepcionista: atiende a los pasajeros (reservas, check-in/out, habitaciones y eventos)
 public class UsuarioRecepcionista extends Usuario
 {
    
@@ -12,6 +14,18 @@ public class UsuarioRecepcionista extends Usuario
         
     }
     
+    @Override
+    public void abrirMenu(Menu menu)
+    {
+        menu.menuRecepcionista();
+    }
+
+    @Override
+    public RolUsuario getRol()
+    {
+        return RolUsuario.RECEPCIONISTA;
+    }
+
     @Override
     public String toString()
     {

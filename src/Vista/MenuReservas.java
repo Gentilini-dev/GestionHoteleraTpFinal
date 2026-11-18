@@ -13,6 +13,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Submenú de reservas y estadías (check-in y check-out)
 public class MenuReservas
 {
     private GestorHotel gestor;

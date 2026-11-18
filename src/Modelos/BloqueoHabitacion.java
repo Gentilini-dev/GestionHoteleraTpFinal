@@ -5,6 +5,7 @@ import Enums.MotivoBloqueo;
 import java.time.LocalDate;
 import java.util.Objects;
 
+// Período en el que una habitación no se puede usar (limpieza, reparación, etc.)
 public class BloqueoHabitacion
 {
     private int id;
@@ -24,6 +25,7 @@ public class BloqueoHabitacion
         this.hasta = hasta;
     }
     
+    // Activo si hoy está dentro del bloqueo. Igual que en las reservas, 'hasta' ya es el día que se libera
     public boolean estaActivo()
     {
         LocalDate hoy = LocalDate.now();

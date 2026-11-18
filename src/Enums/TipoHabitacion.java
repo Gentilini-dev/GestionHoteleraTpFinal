@@ -1,5 +1,6 @@
 package Enums;
 
+// Cada tipo de habitación con su precio por noche
 public enum TipoHabitacion
 {
     SIMPLE(30000), DOBLE(45000), TRIPLE(60000), SUITE(90000);

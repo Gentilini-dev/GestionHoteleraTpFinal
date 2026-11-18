@@ -6,6 +6,8 @@ import Interfaz.IIdentificable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// Clase genérica: guarda elementos en un HashMap usando su id como clave.
+// La usamos para usuarios, pasajeros, habitaciones y salones
 public class Catalogo<T extends IIdentificable>
 {
     private HashMap<Integer, T> elementos;
@@ -15,7 +17,7 @@ public class Catalogo<T extends IIdentificable>
         elementos = new HashMap<>();
     }
 
-    // El id se obtiene del propio elemento, así siempre coincide
+    // El id lo sacamos del elemento, así nunca queda guardado con otra clave
     public void agregar(T elemento) throws ElementoDuplicadoException
     {
         if (elementos.containsKey(elemento.getId()))
@@ -48,8 +50,8 @@ public class Catalogo<T extends IIdentificable>
         return elementos.containsKey(id);
     }
 
-    // Devuelve el mapa interno. Lo usan los DAOs que necesitan reconstruir
-    // relaciones al leer de la base (por ejemplo, la habitación de una reserva).
+    // Lo usan los DAOs para encontrar los objetos ya cargados cuando leen de la base
+    // (por ejemplo, la habitación de una reserva)
     public HashMap<Integer, T> getMapa()
     {
         return elementos;

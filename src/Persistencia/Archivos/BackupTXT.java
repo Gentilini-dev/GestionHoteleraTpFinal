@@ -1,4 +1,4 @@
-package Archivos;
+package Persistencia.Archivos;
 
 import Excepciones.ErrorArchivoException;
 
@@ -11,10 +11,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-/**
- * Persistencia en archivo de texto: genera un backup legible de los datos del hotel
- * y permite volver a leerlo. Cada llamada a exportar() reemplaza el backup anterior.
- */
+// Backup del hotel en un .txt. Cada backup es un archivo nuevo con la fecha en el nombre,
+// y se puede volver a leer desde el menú del admin
 public class BackupTXT
 {
     private String ruta;
@@ -29,10 +27,7 @@ public class BackupTXT
         return ruta;
     }
 
-    /**
-     * Escribe el backup. Recibe las secciones ya armadas: cada sección es un título
-     * y la lista de elementos que se imprimen debajo (uno por línea, con su toString()).
-     */
+    // Recibe un título y una lista por cada sección, y escribe una línea por elemento con su toString()
     public void exportar(ArrayList<String> titulos, ArrayList<ArrayList<?>> secciones) throws ErrorArchivoException
     {
         try

@@ -1,4 +1,4 @@
-package JDBC;
+package Persistencia.JDBC;
 
 import Enums.EstadoEstadia;
 import Modelos.Estadia;
@@ -11,12 +11,8 @@ import java.util.HashMap;
 import Excepciones.*;
 import Interfaz.*;
 
-/*
- * Una estadía tiene varios ocupantes y un pasajero puede tener varias estadías,
- * así que se usan dos tablas:
- *   estadias           -> los datos de la estadía
- *   estadia_ocupantes  -> qué pasajeros estuvieron en cada estadía (id_estadia, id_pasajero)
- */
+// Una estadía puede tener varios pasajeros, por eso usamos dos tablas:
+// estadias con los datos, y estadia_ocupantes con qué pasajero estuvo en cada estadía
 public class ConexionEstadia implements IConexion<Estadia>
 {
     private HashMap<Integer, Habitacion> habitaciones;
@@ -64,7 +60,7 @@ public class ConexionEstadia implements IConexion<Estadia>
         {
             Connection con = ConexionManager.getConnection();
 
-            // 1) La estadía
+            // primero la estadía
             PreparedStatement ps = con.prepareStatement(
                     "INSERT INTO estadias VALUES (?,?,?,?,?)");
             ps.setInt(1, e.getId());
@@ -82,7 +78,7 @@ public class ConexionEstadia implements IConexion<Estadia>
             ps.executeUpdate();
             ps.close();
 
-            // 2) Un registro por cada ocupante
+            // después una fila por cada ocupante
             PreparedStatement psOcupante = con.prepareStatement(
                     "INSERT INTO estadia_ocupantes VALUES (?,?)");
             for (Pasajero p : e.getOcupantes())
