@@ -217,12 +217,6 @@ public class MenuHabitaciones
             System.out.print("Hasta (AAAA-MM-DD): ");
             LocalDate hasta = LocalDate.parse(sc.nextLine().trim());
             
-            if (!hasta.isAfter(desde))
-            {
-                System.out.println("La fecha hasta debe ser posterior a la fecha desde.");
-                return;
-            }
-            
             boolean disponible = gestor.estaDisponible(numero, desde, hasta);
             
             if (disponible)
@@ -242,7 +236,7 @@ public class MenuHabitaciones
         {
             System.out.println("Fecha inválida. Usá el formato AAAA-MM-DD.");
         }
-        catch (ElementoNoEncontradoException e)
+        catch (ElementoNoEncontradoException | DatosInvalidosException e)
         {
             System.out.println(e.getMessage());
         }

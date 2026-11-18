@@ -288,8 +288,17 @@ public class GestorHotel
         return true;
     }
 
-    public boolean estaDisponible(int nro, LocalDate desde, LocalDate hasta) throws ElementoNoEncontradoException
+    public boolean estaDisponible(int nro, LocalDate desde, LocalDate hasta)
+            throws ElementoNoEncontradoException, DatosInvalidosException
     {
+        if (desde.isBefore(LocalDate.now()))
+        {
+            throw new DatosInvalidosException("No se puede consultar una fecha pasada.");
+        }
+        if (!hasta.isAfter(desde))
+        {
+            throw new DatosInvalidosException("La fecha hasta tiene que ser posterior a la fecha desde.");
+        }
         habitaciones.buscar(nro);   // si la habitación no existe, lanza la excepción
         return estaLibre(nro, desde, hasta);
     }
@@ -504,6 +513,10 @@ public class GestorHotel
         if (dias < 1)
         {
             throw new DatosInvalidosException("No se puede bloquear una habitación por " + dias + " días.");
+        }
+        if (desde.isBefore(LocalDate.now()))
+        {
+            throw new DatosInvalidosException("No se puede bloquear una habitación en una fecha pasada.");
         }
 
         LocalDate hasta = desde.plusDays(dias);
