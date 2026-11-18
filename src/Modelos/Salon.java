@@ -3,6 +3,8 @@ package Modelos;
 import Enums.TipoSalon;
 import Interfaz.IIdentificable;
 
+import java.util.Objects;
+
 // Salón para eventos (conferencias, fiestas, reuniones)
 public class Salon implements IIdentificable
 {
@@ -52,6 +54,22 @@ public class Salon implements IIdentificable
     public void setTipo(TipoSalon tipo)
     {
         this.tipo = tipo;
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof Salon salon))
+        {
+            return false;
+        }
+        return id == salon.id;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(id) * 22;
     }
     
     @Override
