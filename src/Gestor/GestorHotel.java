@@ -66,7 +66,7 @@ public class GestorHotel
         this.conexionBloqueo = new ConexionBloqueoHabitacion(habitaciones.getMapa());
         this.conexionEvento = new ConexionEvento(salones.getMapa());
 
-        this.backup = new BackupTXT("backup_hotel.txt");
+        this.backup = new BackupTXT("backup_hotel");
     }
 
     // ----- Carga inicial -----
