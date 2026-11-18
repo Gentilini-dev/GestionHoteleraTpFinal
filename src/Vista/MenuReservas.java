@@ -37,6 +37,9 @@ public class MenuReservas
             System.out.println("2. Cancelar reserva");
             System.out.println("3. Realizar check-in");
             System.out.println("4. Realizar check-out");
+            System.out.println("5. Listar reservas vigentes");
+            System.out.println("6. Listar todas las reservas");
+            System.out.println("7. Reservas de un pasajero");
             System.out.println("0. Volver");
             System.out.print("Elegí una opción: ");
             
@@ -59,7 +62,19 @@ public class MenuReservas
                 case "4":
                     realizarCheckOut();
                     break;
-                
+
+                case "5":
+                    mostrarReservas(gestor.listarReservasVigentes());
+                    break;
+
+                case "6":
+                    mostrarReservas(gestor.listarReservas());
+                    break;
+
+                case "7":
+                    reservasDePasajero();
+                    break;
+
                 case "0":
                     System.out.println("Volviendo al menú principal.");
                     break;
@@ -209,6 +224,42 @@ public class MenuReservas
         catch (ElementoNoEncontradoException | ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void reservasDePasajero()
+    {
+        System.out.print("DNI del pasajero: ");
+        String dni = sc.nextLine().trim();
+
+        try
+        {
+            mostrarReservas(gestor.reservasDePasajero(dni));
+        }
+        catch (ElementoNoEncontradoException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // Una línea por reserva, para encontrar rápido el ID que piden cancelar y check-in
+    private void mostrarReservas(ArrayList<Reserva> lista)
+    {
+        System.out.println();
+        if (lista.isEmpty())
+        {
+            System.out.println("No hay reservas para mostrar.");
+            return;
+        }
+
+        for (Reserva r : lista)
+        {
+            System.out.println("ID " + r.getId()
+                    + " | Hab. " + r.getHabitacion().getNumeroHabitacion()
+                    + " | " + r.getTitular().getApellido() + ", " + r.getTitular().getNombre()
+                    + " (DNI " + r.getTitular().getDni() + ")"
+                    + " | " + r.getDesde() + " al " + r.getHasta()
+                    + " | " + r.getEstado());
         }
     }
 }

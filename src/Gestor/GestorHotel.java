@@ -355,6 +355,25 @@ public class GestorHotel
 
     // ----- Reservas -----
 
+    public ArrayList<Reserva> listarReservas()
+    {
+        return reservas;
+    }
+
+    // Las que todavía se pueden tocar: confirmadas (cancelar o check-in) y en curso (check-out)
+    public ArrayList<Reserva> listarReservasVigentes()
+    {
+        ArrayList<Reserva> vigentes = new ArrayList<>();
+        for (Reserva r : reservas)
+        {
+            if (r.getEstado() == EstadoReserva.CONFIRMADA || r.getEstado() == EstadoReserva.EN_CURSO)
+            {
+                vigentes.add(r);
+            }
+        }
+        return vigentes;
+    }
+
     public Reserva crearReserva(String dni, int nro, LocalDate desde, int noches)
             throws DatosInvalidosException, ElementoNoEncontradoException, HabitacionNoDisponibleException,
                    ErrorConexionSQLException
