@@ -14,18 +14,16 @@ public class ConexionHabitacion implements IConexion<Habitacion>
     @Override
     public void crearTabla() throws ErrorConexionSQLException
     {
-        try
+        try (Connection con = ConexionManager.getConnection();
+             Statement stmt = con.createStatement())
         {
-            Connection con = ConexionManager.getConnection();
-            Statement stmt = con.createStatement();
             stmt.execute("CREATE TABLE IF NOT EXISTS habitaciones ("
                                  + "numeroHabitacion INT NOT NULL,"
                                  + "piso INT NOT NULL,"
                                  + "tipoHabitacion VARCHAR(20) NOT NULL,"
                                  + "PRIMARY KEY (numeroHabitacion))");
             
-            stmt.close();
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -36,22 +34,19 @@ public class ConexionHabitacion implements IConexion<Habitacion>
     @Override
     public void insertar(Habitacion habitacion) throws ErrorConexionSQLException
     {
-        try
+        try (Connection con = ConexionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(
+                     "INSERT INTO habitaciones "
+                             + "(numeroHabitacion, piso, tipoHabitacion) "
+                             + "VALUES (?, ?, ?)"))
         {
-            Connection con = ConexionManager.getConnection();
-            PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO habitaciones "
-                            + "(numeroHabitacion, piso, tipoHabitacion) "
-                            + "VALUES (?, ?, ?)"
-                                                       );
             
             ps.setInt(1, habitacion.getNumeroHabitacion());
             ps.setInt(2, habitacion.getPiso());
             ps.setString(3, habitacion.getTipoHabitacion().name());
             
             ps.executeUpdate();
-            ps.close();
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -62,22 +57,19 @@ public class ConexionHabitacion implements IConexion<Habitacion>
     @Override
     public void actualizar(Habitacion habitacion) throws ErrorConexionSQLException
     {
-        try
+        try (Connection con = ConexionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(
+                     "UPDATE habitaciones "
+                             + "SET piso = ?, tipoHabitacion = ? "
+                             + "WHERE numeroHabitacion = ?"))
         {
-            Connection con = ConexionManager.getConnection();
-            PreparedStatement ps = con.prepareStatement(
-                    "UPDATE habitaciones "
-                            + "SET piso = ?, tipoHabitacion = ? "
-                            + "WHERE numeroHabitacion = ?"
-                                                       );
             
             ps.setInt(1, habitacion.getPiso());
             ps.setString(2, habitacion.getTipoHabitacion().name());
             ps.setInt(3, habitacion.getNumeroHabitacion());
             
             ps.executeUpdate();
-            ps.close();
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -88,18 +80,15 @@ public class ConexionHabitacion implements IConexion<Habitacion>
     @Override
     public void eliminar(int numeroHabitacion) throws ErrorConexionSQLException
     {
-        try
+        try (Connection con = ConexionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(
+                     "DELETE FROM habitaciones WHERE numeroHabitacion = ?"))
         {
-            Connection con = ConexionManager.getConnection();
-            PreparedStatement ps = con.prepareStatement(
-                    "DELETE FROM habitaciones WHERE numeroHabitacion = ?"
-                                                       );
             
             ps.setInt(1, numeroHabitacion);
             
             ps.executeUpdate();
-            ps.close();
-            con.close();
+            
         }
         catch (SQLException e)
         {
@@ -112,12 +101,11 @@ public class ConexionHabitacion implements IConexion<Habitacion>
     {
         ArrayList<Habitacion> habitaciones = new ArrayList<>();
         
-        try
+        try (Connection con = ConexionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT * FROM habitaciones");
+             
+             ResultSet rs = ps.executeQuery())
         {
-            Connection con = ConexionManager.getConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM habitaciones");
-            
-            ResultSet rs = ps.executeQuery();
             
             while (rs.next())
             {
@@ -132,9 +120,7 @@ public class ConexionHabitacion implements IConexion<Habitacion>
                 habitaciones.add(habitacion);
             }
             
-            rs.close();
-            ps.close();
-            con.close();
+            
         }
         catch (SQLException e)
         {
