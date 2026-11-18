@@ -5,4 +5,9 @@ public class ElementoDuplicadoException extends Exception {
     {
         super("Ya existe un elemento con id " + id + ".");
     }
+
+    public ElementoDuplicadoException(String mensaje)
+    {
+        super(mensaje);
+    }
 }

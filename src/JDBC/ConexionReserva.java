@@ -1,7 +1,6 @@
 package JDBC;
 
 import Enums.EstadoReserva;
-import Enums.TipoHabitacion;
 import Excepciones.ErrorConexionSQLException;
 import Interfaz.IConexion;
 import Modelos.Habitacion;
@@ -11,9 +10,21 @@ import Modelos.Reserva;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ConexionReserva implements IConexion<Reserva>
 {
+    // Pasajeros y habitaciones ya cargados en el gestor (clave: id del pasajero / número de habitación).
+    // Se usan para que cada reserva apunte a los MISMOS objetos que están en los catálogos.
+    private HashMap<Integer, Pasajero> pasajeros;
+    private HashMap<Integer, Habitacion> habitaciones;
+
+    public ConexionReserva(HashMap<Integer, Pasajero> pasajeros, HashMap<Integer, Habitacion> habitaciones)
+    {
+        this.pasajeros = pasajeros;
+        this.habitaciones = habitaciones;
+    }
+
     @Override
     public void crearTabla() throws ErrorConexionSQLException
     {
@@ -136,62 +147,25 @@ public class ConexionReserva implements IConexion<Reserva>
     public ArrayList<Reserva> traerTodos() throws ErrorConexionSQLException
     {
         ArrayList<Reserva> reservas = new ArrayList<>();
-        
         try
         {
             Connection con = ConexionManager.getConnection();
-            
+            // La tabla guarda el DNI del titular; con el JOIN obtenemos su id para buscarlo en el catálogo
             PreparedStatement ps = con.prepareStatement(
-                    "SELECT "
-                            + "r.id AS idReserva, "
-                            + "r.desde, "
-                            + "r.hasta, "
-                            + "r.estado, "
-                            + "p.id AS idPasajero, "
-                            + "p.nombre, "
-                            + "p.apellido, "
-                            + "p.dni, "
-                            + "p.origen, "
-                            + "p.domicilioOrigen, "
-                            + "h.numeroHabitacion, "
-                            + "h.piso, "
-                            + "h.tipoHabitacion "
+                    "SELECT r.id, r.numeroHabitacion, r.desde, r.hasta, r.estado, p.id AS idPasajero "
                             + "FROM reservas r "
-                            + "JOIN pasajeros p "
-                            + "ON r.dniPasajero = p.dni "
-                            + "JOIN habitaciones h "
-                            + "ON r.numeroHabitacion = h.numeroHabitacion"
-                                                       );
-            
+                            + "JOIN pasajeros p ON r.dniPasajero = p.dni");
             ResultSet rs = ps.executeQuery();
-            
             while (rs.next())
             {
-                
-                int idPasajero = rs.getInt("idPasajero");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                String dni = rs.getString("dni");
-                String origen = rs.getString("origen");
-                String domicilioOrigen = rs.getString("domicilioOrigen");
-                
-                Pasajero pasajero = new Pasajero(nombre, apellido, dni, origen, domicilioOrigen, idPasajero);
-                
-                int numeroHabitacion = rs.getInt("numeroHabitacion");
-                int piso = rs.getInt("piso");
-                
-                TipoHabitacion tipoHabitacion = TipoHabitacion.valueOf(rs.getString("tipoHabitacion"));
-                
-                Habitacion habitacion = new Habitacion(numeroHabitacion, piso, tipoHabitacion);
-                
-                
-                int idReserva = rs.getInt("idReserva");
+                int idReserva = rs.getInt("id");
+                Pasajero titular = pasajeros.get(rs.getInt("idPasajero"));             // id -> objeto
+                Habitacion habitacion = habitaciones.get(rs.getInt("numeroHabitacion")); // número -> objeto
                 LocalDate desde = rs.getDate("desde").toLocalDate();
                 LocalDate hasta = rs.getDate("hasta").toLocalDate();
                 EstadoReserva estado = EstadoReserva.valueOf(rs.getString("estado"));
-                
-                Reserva reserva = new Reserva(idReserva, pasajero, habitacion, desde, hasta, estado);
-                reservas.add(reserva);
+
+                reservas.add(new Reserva(idReserva, titular, habitacion, desde, hasta, estado));
             }
             rs.close();
             ps.close();

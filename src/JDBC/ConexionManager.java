@@ -6,9 +6,9 @@ import java.sql.*;
 
 public class ConexionManager
 {
-    private static String url="jdbc:mysql://172.16.1.64:3306/ProyectoFinalFERNANDEZ_GENTILINI";
-    private static String username = "bdd1";
-    private static String password = "bdd1";
+    private static String url = "jdbc:mysql://localhost:3306/hotel";
+    private static String username = "root";
+    private static String password = "456311";
     
     private static Connection connection;
     

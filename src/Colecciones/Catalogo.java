@@ -48,6 +48,13 @@ public class Catalogo<T extends IIdentificable>
         return elementos.containsKey(id);
     }
 
+    // Devuelve el mapa interno. Lo usan los DAOs que necesitan reconstruir
+    // relaciones al leer de la base (por ejemplo, la habitación de una reserva).
+    public HashMap<Integer, T> getMapa()
+    {
+        return elementos;
+    }
+
     public ArrayList<T> listar()
     {
         return new ArrayList<>(elementos.values());

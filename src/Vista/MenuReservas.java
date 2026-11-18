@@ -2,6 +2,7 @@ package Vista;
 
 import Excepciones.DatosInvalidosException;
 import Excepciones.ElementoNoEncontradoException;
+import Excepciones.ErrorConexionSQLException;
 import Excepciones.HabitacionNoDisponibleException;
 import Gestor.GestorHotel;
 import Modelos.Estadia;
@@ -109,7 +110,8 @@ public class MenuReservas
         }
         catch (DatosInvalidosException |
                ElementoNoEncontradoException |
-               HabitacionNoDisponibleException e)
+               HabitacionNoDisponibleException |
+               ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
         }
@@ -133,7 +135,7 @@ public class MenuReservas
         {
             System.out.println("El ID debe ser un número entero.");
         }
-        catch (ElementoNoEncontradoException | DatosInvalidosException e)
+        catch (ElementoNoEncontradoException | DatosInvalidosException | ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
         }
@@ -178,7 +180,7 @@ public class MenuReservas
         {
             System.out.println("El ID debe ser un número entero.");
         }
-        catch (ElementoNoEncontradoException | DatosInvalidosException e)
+        catch (ElementoNoEncontradoException | DatosInvalidosException | ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
         }
@@ -203,7 +205,7 @@ public class MenuReservas
         {
             System.out.println("El número de habitación debe ser un número entero.");
         }
-        catch (ElementoNoEncontradoException e)
+        catch (ElementoNoEncontradoException | ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
         }

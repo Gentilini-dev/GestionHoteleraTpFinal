@@ -5,6 +5,7 @@ import Enums.TipoHabitacion;
 import Excepciones.DatosInvalidosException;
 import Excepciones.ElementoDuplicadoException;
 import Excepciones.ElementoNoEncontradoException;
+import Excepciones.ErrorConexionSQLException;
 import Excepciones.HabitacionNoDisponibleException;
 import Gestor.GestorHotel;
 import Modelos.BloqueoHabitacion;
@@ -124,7 +125,7 @@ public class MenuHabitaciones
         {
             System.out.println("El tipo de habitación ingresado no es válido.");
         }
-        catch (ElementoDuplicadoException e)
+        catch (ElementoDuplicadoException | ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
         }
@@ -301,7 +302,8 @@ public class MenuHabitaciones
         }
         catch (DatosInvalidosException |
                ElementoNoEncontradoException |
-               HabitacionNoDisponibleException e)
+               HabitacionNoDisponibleException |
+               ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
         }

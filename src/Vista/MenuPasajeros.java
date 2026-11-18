@@ -2,6 +2,7 @@ package Vista;
 
 import Excepciones.ElementoDuplicadoException;
 import Excepciones.ElementoNoEncontradoException;
+import Excepciones.ErrorConexionSQLException;
 import Gestor.GestorHotel;
 import Modelos.Estadia;
 import Modelos.Pasajero;
@@ -70,9 +71,6 @@ public class MenuPasajeros
             System.out.println();
             System.out.println("----- REGISTRAR PASAJERO -----");
             
-            System.out.print("ID: ");
-            int id = Integer.parseInt(sc.nextLine());
-            
             System.out.print("Nombre: ");
             String nombre = sc.nextLine();
             
@@ -88,24 +86,13 @@ public class MenuPasajeros
             System.out.print("Origen: ");
             String origen = sc.nextLine();
             
-            Pasajero pasajero = new Pasajero(
-                    nombre,
-                    apellido,
-                    dni,
-                    domicilioOrigen,
-                    origen,
-                    id
-            );
-            
-            gestor.registrarPasajero(pasajero);
+            // El id lo asigna el gestor automáticamente
+            Pasajero pasajero = gestor.registrarPasajero(nombre, apellido, dni, domicilioOrigen, origen);
             
             System.out.println("\nPasajero registrado correctamente.");
+            System.out.println(pasajero);
         }
-        catch (NumberFormatException e)
-        {
-            System.out.println("\nEl ID debe ser un número.");
-        }
-        catch (ElementoDuplicadoException e)
+        catch (ElementoDuplicadoException | ErrorConexionSQLException e)
         {
             System.out.println(e.getMessage());
         }
