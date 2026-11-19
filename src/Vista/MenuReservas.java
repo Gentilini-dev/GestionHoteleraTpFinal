@@ -96,7 +96,19 @@ public class MenuReservas
             System.out.println("----- CREAR RESERVA -----");
             
             System.out.print("DNI del titular: ");
-            String dni = sc.nextLine();
+            String dni = sc.nextLine().trim();
+            
+            if (dni.isEmpty())
+            {
+                System.out.println("El DNI no puede estar vacío.");
+                return;
+            }
+            
+            if (!pasajeroRegistrado(dni))
+            {
+                System.out.println("No se creó la reserva.");
+                return;
+            }
             
             System.out.print("Número de habitación: ");
             int numero = Integer.parseInt(sc.nextLine());
@@ -180,9 +192,16 @@ public class MenuReservas
                 System.out.print("DNI del acompañante: ");
                 dni = sc.nextLine().trim();
                 
-                if (!dni.isEmpty() && pasajeroRegistrado(dni))
+                if (!dni.isEmpty())
                 {
-                    dnisAcompanantes.add(dni);
+                    if (pasajeroRegistrado(dni))
+                    {
+                        dnisAcompanantes.add(dni);
+                    }
+                    else
+                    {
+                        System.out.println("No se agregó el acompañante.");
+                    }
                 }
                 
             }
@@ -228,8 +247,9 @@ public class MenuReservas
         }
     }
 
-    // Si el acompañante no está registrado, se ofrece darlo de alta ahí mismo
-    // para no tener que salir del check-in. Devuelve true si se puede usar el DNI.
+    // Si el DNI no está registrado, se ofrece dar de alta al pasajero ahí mismo
+    // para no tener que ir al menú de pasajeros. Lo usan crear reserva y check-in.
+    // Devuelve true si el DNI ya se puede usar.
     private boolean pasajeroRegistrado(String dni)
     {
         try
@@ -242,7 +262,6 @@ public class MenuReservas
             System.out.print("Ese DNI no está registrado. ¿Querés registrarlo ahora? (s/n): ");
             if (!sc.nextLine().trim().equalsIgnoreCase("s"))
             {
-                System.out.println("No se agregó el acompañante.");
                 return false;
             }
         }
